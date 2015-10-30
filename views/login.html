@@ -1,0 +1,20 @@
+<div class="col-sm-10 col-sm-offset-1">
+    
+    <div class="col-sm-6">
+        <h2>Register</h2>
+        <input type="text" class="form-control" ng-model="registerInfo.firstname" placeholder="First Name">
+        <input type="text" class="form-control" ng-model="registerInfo.middleinitial" placeholder="Middle Initial">
+        <input type="text" class="form-control" ng-model="registerInfo.lastname" placeholder="Last Name">
+        <input type="text" class="form-control" ng-model="registerInfo.email" placeholder="Email">
+        <input type="password" class="form-control" ng-model="registerInfo.password" placeholder="Password">
+        <button ng-click="registerUser()">Register</button>
+        
+    </div>
+    <div class="col-sm-6">
+        <h2>Login</h2>
+        <input type="text" class="form-control" ng-model="loginInfo.email" placeholder="Email">
+        <input type="password" class="form-control" ng-model="loginInfo.password" placeholder="Password">
+        <button ng-click="loginUser()">Login</button>
+    </div>
+    
+</div>
