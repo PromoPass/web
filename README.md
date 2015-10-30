@@ -1,13 +1,14 @@
-# web
+# web 
 
-## todo
-### security
-  - get rid of password stuff from git (database config files)
-  - hashing passwords (passwords are stored plaintext on the database)
+This is the web interface for providers. It should boast security + ease. Also the front facing part of our server. The backend (located at promopass.root.sx) is important for our mobile app to grab data from.
 
-### pages
-  - create ad page
+## Getting Started
 
-### functionality
-  - a logout button
-  - properly working URL...they're kind of funky right now?
+### Todo
+* Add an edit profile for providers to add their businesses/gimbal devices to
+* Add create ad functionality
+* Configure google/facebook buttons on login/sign up page.
+
+#### Maybe
+* Restful API would be nice -- but really low on the priority list. :( 
+* 

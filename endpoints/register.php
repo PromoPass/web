@@ -1,24 +1,24 @@
-<?php 
+<?php
     include("../connection.php");
     $data = json_decode(file_get_contents("php://input")); 
-     
-    $firstname = $data->firstname;
-    $middleinitial = $data->middleinitial;
-    $lastname = $data->lastname;
+    $provider_id = $data->user_id;
+    $first_name = $data->first_name;
+    $middle_initial = $data->properties->MiddleInitial->value;
+    $last_name = "matie";//$data->last_name;
     $email = $data->email;
-    $password = $data->password;
-
-    $q = "INSERT INTO Provider (FirstName, MiddleInitial, LastName, Email, Password) VALUES (:fname, :middleinit, :lname, :email, :password)";
+    //echo json_encode($provider_id); 
+    
+    $q = "INSERT INTO Provider (ProviderID, FirstName, MiddleInitial, LastName, Email) VALUES (:provider_id, :first_name, :middle_initial, :last_name, :email)
+            ON DUPLICATE KEY UPDATE
+            FirstName=:first_name, MiddleInitial=:middle_initial, LastName=:last_name, Email=:email";
     $query = $db->prepare($q);
 
     $execute = $query->execute(array(
-        ":fname"        => $firstname,
-        ":middleinit"   => $middleinitial,
-        ":lname"        => $lastname,
-        ":email"        => $email,
-        ":password"     => $password
+        ":provider_id"        => $provider_id,
+        ":first_name"   => $first_name,
+        ":middle_initial"        => $middle_initial,
+        ":last_name"        => $last_name,
+        ":email"     => $email
     ) );
-    
-   echo json_encode($email);
-?>
 
+?>
