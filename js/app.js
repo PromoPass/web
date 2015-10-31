@@ -18,6 +18,7 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/reset-password', {templateUrl: 'partials/reset-password.html', public: true});
   $routeProvider.when('/set-password', {templateUrl: 'partials/set-password.html', set_password: true});
   $routeProvider.when('/articles', {templateUrl: 'partials/articles.html', controller: 'ArticlesCtrl'});
+  $routeProvider.when('/edit-profile', {templateUrl: 'partials/edit-profile.html', controller: 'EditProfileCtrl'});
   $routeProvider.when('/createAd', {templateUrl: 'partials/createAd.html', controller: 'CreateAdCtrl'});
   
   $routeProvider.otherwise({redirectTo: '/'});
@@ -27,10 +28,9 @@ run(function(user) {
 }).
 run(function(user, $rootScope, $http) {
   $rootScope.$on('user.login', function() {
-    console.log(user.current);
     var data = user.current;
     $http.post("endpoints/register.php", data).success(function(response){
-            console.log(response);
+            console.log(response); 
         }).error(function(error){
             console.log(error); 
     });

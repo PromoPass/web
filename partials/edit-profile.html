@@ -1,0 +1,18 @@
+<div class="container-fluid">
+    <form name="edit-profile">
+       <div class="form-group">
+           <label for="Name">Business Name:</label> 
+           <input type="text" class="form-control" ng-model="profileInfo.business_name" id="business_name">
+        </div>
+       <div class="form-group">
+           <label for="GimbalID">GimbalID:</label> 
+           <input type="text" class="form-control" ng-model="profileInfo.gimbal_id" id="gimbal_id">
+        </div>
+        
+        <p>todo: Add an option to add more businesses here.</p>
+       <button ng-click="editProfile()" type="submit" class="btn btn-default">Save Changes</button> 
+    </form>
+
+
+
+</div>

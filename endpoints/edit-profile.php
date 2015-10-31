@@ -1,5 +1,5 @@
 <?php
-    include("../connection.php");
+ /*   include("../connection.php");
     $data = json_decode(file_get_contents("php://input")); 
     $provider_id = $data->user_id;
     $first_name = $data->first_name;
@@ -20,4 +20,4 @@
         ":last_name"        => $last_name,
         ":email"     => $email
     ) );
-
+ */

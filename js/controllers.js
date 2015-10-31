@@ -25,7 +25,30 @@ angular.module('myApp.controllers', [])
 				$scope.loading = false;
 			});
   }])
-  .controller('CreateAdCtrl', ['$scope', '$http', function($scope, $http) {
-     //$scope. 
   
+  .controller('CreateAdCtrl', ['$scope', '$http', function($scope, $http) {
+  
+  }])
+
+  .controller('EditProfileCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
+      var data = {
+            provider_id: user.current
+        }
+      
+      $scope.editProfile = function() {
+          console.log(user.current);
+      }
+      
+      /*
+     $scope.editProfile = function(){
+         console.log(user.current);
+     }*/
+        /* 
+        $http.post("endpoints/register.php", data).success(function(response){
+            console.log(response);
+            localStorage.setItem("user", JSON.stringify({user: response}));
+            $state.go("application");
+        }).error(function(error){
+            console.log(error); 
+        }); */
   }]);
