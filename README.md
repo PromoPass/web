@@ -8,7 +8,7 @@ This is the web interface for providers. It should boast security + ease. Also t
 * Add an edit profile for providers to add their businesses/gimbal devices to
 * Add create ad functionality
 * Configure google/facebook buttons on login/sign up page.
-
+* Typecheck ALL OF the forms.
 #### Maybe
 * Restful API would be nice -- but really low on the priority list. :( 
 * 

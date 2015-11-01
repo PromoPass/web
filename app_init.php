@@ -9,8 +9,5 @@
 
 	User::setAppId("56303c413caab");
 	
-	
-
-   
 
 ?>

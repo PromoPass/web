@@ -19,7 +19,8 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/set-password', {templateUrl: 'partials/set-password.html', set_password: true});
   $routeProvider.when('/articles', {templateUrl: 'partials/articles.html', controller: 'ArticlesCtrl'});
   $routeProvider.when('/edit-profile', {templateUrl: 'partials/edit-profile.html', controller: 'EditProfileCtrl'});
-  $routeProvider.when('/createAd', {templateUrl: 'partials/createAd.html', controller: 'CreateAdCtrl'});
+  $routeProvider.when('/create-ad', {templateUrl: 'partials/create-ad.html', controller: 'CreateAdCtrl'});
+  $routeProvider.when('/view-adhistory', {templateUrl: 'partials/view-adhistory.html', controller: 'ViewAdHistoryCtrl'});
   
   $routeProvider.otherwise({redirectTo: '/'});
 }]).

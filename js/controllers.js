@@ -26,29 +26,51 @@ angular.module('myApp.controllers', [])
 			});
   }])
   
-  .controller('CreateAdCtrl', ['$scope', '$http', function($scope, $http) {
+  .controller('CreateAdCtrl', ['$scope', '$http', '$location', function($scope, $http, $location) {
   
   }])
-
   .controller('EditProfileCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
-      var data = {
-            provider_id: user.current
-        }
-      
-      $scope.editProfile = function() {
-          console.log(user.current);
+      // variables
+      $scope.businessInfo = {
+          business_id: undefined,
+          name: undefined,
+          provider_id: user.current.user_id,
+          ein: undefined,
+          gimbal_id: undefined
       }
       
-      /*
-     $scope.editProfile = function(){
-         console.log(user.current);
-     }*/
-        /* 
-        $http.post("endpoints/register.php", data).success(function(response){
+      $scope.addBusinessInfo = {
+          business_id: undefined,
+          name: undefined,
+          provider_id: user.current.user_id,
+          ein: undefined,
+          gimbal_id: undefined
+      }
+      
+      // functions
+      $scope.businesses = null;
+          $http.get("endpoints/get-businesses.php").success(function(data) {
+              $scope.businesses = data;  
+          }).error(function(error){
+              console.log(error);
+          });
+      
+      
+      $scope.addBusiness = function() {
+          var data = {
+            business_id: $scope.addBusinessInfo.business_id, 
+            name: $scope.addBusinessInfo.name,
+            provider_id: $scope.addBusinessInfo.provider_id,
+            ein: $scope.addBusinessInfo.ein,
+            gimbal_id: $scope.addBusinessInfo.gimbal_id
+          }
+        $http.post("endpoints/add-business.php", data).success(function(response){
             console.log(response);
-            localStorage.setItem("user", JSON.stringify({user: response}));
-            $state.go("application");
         }).error(function(error){
             console.log(error); 
-        }); */
-  }]);
+        }); 
+      }
+  }])
+  .controller('ViewAdHistoryCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
+  
+  }])
