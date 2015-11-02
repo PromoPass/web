@@ -57,7 +57,6 @@ angular.module('myApp.controllers', [])
       
       
       $scope.editBusiness = function(business) {
-        console.log("adding...");
         console.log(business);
         $http.post("endpoints/add-business.php", business).success(function(response){
             console.log(response);
