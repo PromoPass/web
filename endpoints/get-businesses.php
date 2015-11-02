@@ -16,11 +16,16 @@
 	if(!$valid_token){
 		echo "Invalid token";
 	}else{
-        $provider_id =  User::current()->user_id;
-        $q = "SELECT BusinessID, Name, EIN, GimbalID FROM Business WHERE ProviderID = :provider_id";
+        $ProviderID =  User::current()->user_id;
+        $query = dbGetRows("Business", "Select BusinessID, Name, EIN, GimbalID FROM Business WHERE ProviderID = $ProviderID");
+        echo json_encode($query->fetchAll());
+        /*
+        $ProviderID =  User::current()->user_id;
+        $q = "SELECT BusinessID, Name, EIN, GimbalID FROM Business WHERE ProviderID = :ProviderID";
         $query = $db->prepare($q);
         $execute = $query->execute(array(
-        ':provider_id' => $provider_id 
+        ':ProviderID' => $ProviderID
         ));
         echo json_encode($query->fetchAll()); 
+        */
     }

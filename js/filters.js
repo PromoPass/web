@@ -7,4 +7,9 @@ angular.module('myApp.filters', []).
     return function(text) {
       return String(text).replace(/\%VERSION\%/mg, version);
     };
-  }]);
+  }])
+  .filter('compress', function(){
+    return function(text){ 
+      return String(text).replace(/\s*/mg, "-")
+    };
+  });

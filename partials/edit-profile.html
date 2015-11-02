@@ -1,29 +1,30 @@
 <div class="container-fluid">
-    <form name="edit-business" ng-repeat="business in businesses">
+    
+    <form name="{{business.Name | compress}}" ng-repeat="business in businesses">
           
        <div class="form-group"> 
             <label for="Name">Business Name:</label>
-           <input type="text" class="form-control" ng-model="businessInfo.name" placeholder="{{business.Name}}"></input>
+           <input type="text" class="form-control" ng-model="business.Name" placeholder="{{business.Name}}"></input>
         </div> 
         <div class="form-group">
            <label for="GimbalID">Gimbal ID:</label>
-          <input type="text" class="form-control" ng-model="businessInfo.gimbal_id" placeholder="{{business.GimbalID}}"></input>
+          <input type="text" class="form-control" ng-model="business.GimbalID" placeholder="{{business.GimbalID}}"></input>
         </div>
-           <submit ng-click="addBusiness()" type="submit" class="btn btn-default">Save Changes</submit>
+           <submit ng-click="editBusiness(business)" type="submit" class="btn btn-default">Save Changes</submit>
     </form>
     {{businesses}}
-    <!-- todo: load in all business forms the user has -->
+   <!-- TODO: need to deprecate below in favor of a button --> 
     <form name="add-business">
        <div class="form-group">
            <label for="Name">Business Name:</label> 
-           <input type="text" class="form-control" ng-model="addBusinessInfo.name"> 
+           <input type="text" class="form-control" ng-model="addBusinessInfo.Name"> 
         </div>
        <div class="form-group">
            <label for="GimbalID">GimbalID:</label> 
-           <input type="text" class="form-control" ng-model="addBusinessInfo.gimbal_id">
+           <input type="text" class="form-control" ng-model="addBusinessInfo.GimbalID">
         </div>
         
         <p>todo: Add an option to add more businesses here.</p>
-       <button ng-click="addBusiness()" type="submit" class="btn btn-default">Save Changes</button> 
+       <button ng-click="addBusiness()" type="submit" class="btn btn-default">Add Business</button> 
     </form>
 </div>

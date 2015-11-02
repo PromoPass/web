@@ -32,19 +32,19 @@ angular.module('myApp.controllers', [])
   .controller('EditProfileCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
       // variables
       $scope.businessInfo = {
-          business_id: undefined,
-          name: undefined,
-          provider_id: user.current.user_id,
-          ein: undefined,
-          gimbal_id: undefined
+          BusinessID: undefined,
+          Name: undefined,
+          ProviderID: user.current.user_id,
+          EIN: undefined,
+          GimbalID: undefined
       }
       
       $scope.addBusinessInfo = {
-          business_id: undefined,
-          name: undefined,
-          provider_id: user.current.user_id,
-          ein: undefined,
-          gimbal_id: undefined
+          BusinessID: undefined,
+          Name: undefined,
+          ProviderID: user.current.user_id,
+          EIN: undefined,
+          GimbalID: undefined
       }
       
       // functions
@@ -56,14 +56,25 @@ angular.module('myApp.controllers', [])
           });
       
       
+      $scope.editBusiness = function(business) {
+        console.log("adding...");
+        console.log(business);
+        $http.post("endpoints/add-business.php", business).success(function(response){
+            console.log(response);
+        }).error(function(error){
+            console.log(error); 
+        }); 
+      }
+      
       $scope.addBusiness = function() {
           var data = {
-            business_id: $scope.addBusinessInfo.business_id, 
-            name: $scope.addBusinessInfo.name,
-            provider_id: $scope.addBusinessInfo.provider_id,
-            ein: $scope.addBusinessInfo.ein,
-            gimbal_id: $scope.addBusinessInfo.gimbal_id
+            BusinessID: $scope.addBusinessInfo.BusinessID, 
+            Name: $scope.addBusinessInfo.Name,
+            ProviderID: $scope.addBusinessInfo.ProviderID,
+            EIN: $scope.addBusinessInfo.EIN,
+            GimbalID: $scope.addBusinessInfo.GimbalID
           }
+          console.log(data);
         $http.post("endpoints/add-business.php", data).success(function(response){
             console.log(response);
         }).error(function(error){
