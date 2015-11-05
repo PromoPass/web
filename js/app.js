@@ -45,17 +45,22 @@ run(function($rootScope, $http, user) {
         });
         
         // add token to session cache table
+        /*
         $http.post("endpoints/update-cache.php", data)
         .success(function(response){
         }).error(function(error){
             console.log("Could not succeessfully add to cached database");
         });
-        
+        */
     });
     $rootScope.$on('user.logout', function() {
         $http.defaults.headers.common.Authorization = null;
         
         // remove token from session cache table
+        /* SEE EXAMPLE FROM ABOVE (UPDATE CACHE)
+            will probably look a lot like that, but let'SEE
+            just make this TODO
+        */
         console.log("logged out"); 
     }); 
 });
