@@ -2,21 +2,9 @@
     include("../connection.php");
 	use \UserApp\Widget\User;
 	require("../app_init.php");    
-
-    if(isset($_COOKIE["ua_session_token"])){
-		$token = $_COOKIE["ua_session_token"];
-
-		try{
-			$valid_token = User::loginWithToken($token);
-		}catch(\UserApp\Exceptions\ServiceException $exception){
-			$valid_token = false;
-		}
-	}
-
-	if(!$valid_token){
-		echo "Invalid token";
-	}else{
-        $ProviderID =  User::current()->user_id;
-        $query = dbGetRows("Business", "WHERE ProviderID = '$ProviderID'"); 
-        echo json_encode($query->fetchAll());
-    }
+    $ProviderID =  User::current()->user_id;
+    
+    //$query = dbQuery("SELECT `BusinessID`, `Name`, `EIN`, `GimbalID` FROM `Business` WHERE ProviderID = $ProviderID"); 
+    $query = dbQuery("SELECT BusinessID, Name, EIN, GimbalID from Business where ProviderID = '$ProviderID'");
+    echo json_encode($query->fetchAll());
+    

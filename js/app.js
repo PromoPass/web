@@ -23,18 +23,39 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view-adhistory', {templateUrl: 'partials/view-adhistory.html', controller: 'ViewAdHistoryCtrl'});
   
   $routeProvider.otherwise({redirectTo: '/'});
-}]).
-run(function(user) {
-  user.init({ appId: '56303c413caab' });
-}).
-run(function(user, $rootScope, $http) {
-  $rootScope.$on('user.login', function() {
-    var data = user.current;
-    $http.post("endpoints/register.php", data).success(function(response){
-            console.log(response); 
-        }).error(function(error){
-            console.log(error); 
-    });
-  });
   
+}]).
+run(function($rootScope, $http, user) {
+    user.init({ appId: '56303c413caab' });
+    $rootScope.$on('user.login', function() {
+        $http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + user.token());
+        var data = user.current;
+        
+        // testing statements
+        console.log(data);
+        //console.log($http.defaults.headers.common.Authorization); 
+        
+        //update provider_id table
+        $http.post("endpoints/register.php", data)
+        .success(function(response){
+            // console.log(response);
+        }).error(function(error){
+            //console.log(error);
+            console.log("Could not add user to database"); 
+        });
+        
+        // add token to session cache table
+        $http.post("endpoints/update-cache.php", data)
+        .success(function(response){
+        }).error(function(error){
+            console.log("Could not succeessfully add to cached database");
+        });
+        
+    });
+    $rootScope.$on('user.logout', function() {
+        $http.defaults.headers.common.Authorization = null;
+        
+        // remove token from session cache table
+        console.log("logged out"); 
+    }); 
 });

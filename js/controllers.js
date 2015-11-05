@@ -6,6 +6,11 @@ angular.module('myApp.controllers', [])
   .controller('HomeCtrl', ['$scope', function($scope) {
 
   }])
+  .controller('RegisterCtrl', ['$scope', function($scope) {
+      $scope.register = function(signupDetails){
+         // to do 
+      }
+  }])
   .controller('ArticlesCtrl', ['$scope', '$http', function($scope, $http) {
   	$scope.loading = true;
   	$scope.error = null;
