@@ -26,7 +26,7 @@ config(['$routeProvider', function($routeProvider) {
   
 }]).
 run(function($rootScope, $http, user) {
-    user.init({ appId: '56303c413caab' });
+    user.init({ appId: appid });
     $rootScope.$on('user.login', function() {
         $http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + user.token());
         var data = user.current;
