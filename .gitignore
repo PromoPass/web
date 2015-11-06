@@ -1,3 +1,5 @@
 # Ignore Files #
 ################
-connection.php
+js/config.js
+config.php
+app_init.php
