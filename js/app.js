@@ -32,26 +32,28 @@ run(function($rootScope, $http, user) {
         var data = user.current;
         
         // testing statements
-        console.log(data);
+        //console.log(data);
         //console.log($http.defaults.headers.common.Authorization); 
         
         //update provider_id table
         $http.post("endpoints/register.php", data)
         .success(function(response){
             // console.log(response);
+            console.log("Added/updated user on database!");
         }).error(function(error){
             //console.log(error);
             console.log("Could not add user to database"); 
         });
         
         // add token to session cache table
-        /*
+        data['session_token'] = $http.defaults.headers.common.Authorization;
         $http.post("endpoints/update-cache.php", data)
         .success(function(response){
+            console.log("Added session to cache database!");
         }).error(function(error){
             console.log("Could not succeessfully add to cached database");
         });
-        */
+        
     });
     $rootScope.$on('user.logout', function() {
         $http.defaults.headers.common.Authorization = null;

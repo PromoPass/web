@@ -12,7 +12,7 @@ angular.module('myApp.controllers', [])
       }
   }])
   .controller('CreateAdCtrl', ['$scope', '$http', '$location', function($scope, $http, $location) {
-  
+    
   }])
   .controller('EditProfileCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
       // variables
