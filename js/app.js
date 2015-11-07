@@ -32,56 +32,36 @@ run(function($rootScope, $http, user) {
         $http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + session_token);
         var data = user.current;
         
-        // testing statements
-        //console.log(data);
-        //console.log($http.defaults.headers.common.Authorization); 
-        
         //update provider_id table
-        //$http.post("endpoints/register.php", data)
-        $http.get("http://fendatr.com/api/v1/provider").
-        success(function(response){
-            console.log("DID IT");
-            console.log(response);
-        })
-        /* 
-        $http.post("http://fendatr.com/api/v1/provider")
+        $http.post("http://fendatr.com/api/v1/provider", data)
         .success(function(response){
-            console.log("registering...");
-            console.log(response);
-            console.log("Added/updated provider table on database!");
+            //console.log(JSON.stringify(response) + ": Added/updated provider table on database!");
         }).error(function(error){
-            //console.log(error);
-            //console.log("Could not add user to database"); 
+            //console.log(error + ": could not add user to database");
         });
-       */ 
+        
         // add token to session cache table
         data.session_token = session_token; 
-        data.is_live_token = true;
-        console.log(data.session_token + " adding to cache");
-        $http.post("endpoints/update-cache.php", data)
+        $http.post("http://fendatr.com/api/v1/usercache", data)
         .success(function(response){
-            console.log("Added session to cache database!");
-            console.log(data);
-            console.log(response);
+            //console.log(JSON.stringify(response) + ": added to user cache");
         }).error(function(error){
-            console.log("Could not succeessfully add to cached database");
-            console.log(error);
-            console.log("failed cache :(");
+            //console.log(error + ": error adding to user cache");
         });
-        
     });
+    
     $rootScope.$on('user.logout', function() {
         var data = {};
         data.session_token = $http.defaults.headers.common.Authorization.split(" ").splice(-1)[0].slice(0, -1);
-        data.is_live_token = false;
-        console.log("removing " + atob(data.session_token).slice(1));
-        $http.defaults.headers.common.Authorization = null;
-        $http.post("endpoints/update-cache.php", data)
-        .success(function(response){
-            console.log(response);
-        }).error(function(error){
-            console.log(error);
-        })
+        data.session_token = atob(data.session_token).slice(1);
         
+        // remove session from usercache table
+        $http.delete("http://fendatr.com/api/v1/usercache/" + data.session_token)
+        .success(function(response){
+            //console.log(response + ": removed");
+        }).error(function(error){
+            //console.log(error + ": removal unsuccessful");
+        })
+        $http.defaults.headers.common.Authorization = null;
     }); 
 });

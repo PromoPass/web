@@ -8,7 +8,7 @@
     $q = "INSERT INTO Provider (ProviderID, Email) 
           VALUES (:provider_id, :email)
           ON DUPLICATE KEY UPDATE 
-              Email= :email
+              Email = :email
           ";
     $query = $db->prepare($q);
     $query->bindParam(':provider_id', $provider_id);
