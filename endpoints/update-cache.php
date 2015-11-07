@@ -1,19 +1,29 @@
 <?php
     include("../connection.php");
     $data = json_decode(file_get_contents("php://input"));
-    $user_id = $data->user_id;
+    
     $session_token = $data->session_token;
     $is_live_token = $data->is_live_token;
-    //echo json_encode($provider_id); 
+    
+
     $q = "";
     if($is_live_token) {
-        $q = "INSERT INTO UserCache (user_id, session_token) 
-          VALUES (':user_id', ':session_token')
-          ";
-    } else {
-        $q = "";
+        $user_id = $data->user_id;
+        $q = "INSERT INTO UserCache (session_token, user_id) 
+          VALUES (:session_token, :user_id)
+          ON DUPLICATE KEY UPDATE user_id = :user_id";
+       
+    } else { // remove from database
+        $q = "DELETE FROM UserCache
+              WHERE session_token = :session_token";
+        echo "deleting...";
+        echo $q;
     }
     $query = $db->prepare($q);
-    $query->bindParam(':user_id', $user_id);
+
+    if($is_live_token) {
+        $query->bindParam(':user_id', $user_id);
+    }
     $query->bindParam(':session_token', $session_token);
+    
     $query->execute();

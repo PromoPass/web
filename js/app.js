@@ -28,7 +28,8 @@ config(['$routeProvider', function($routeProvider) {
 run(function($rootScope, $http, user) {
     user.init({ appId: appid });
     $rootScope.$on('user.login', function() {
-        $http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + user.token());
+        var session_token = user.token();
+        $http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + session_token);
         var data = user.current;
         
         // testing statements
@@ -36,33 +37,51 @@ run(function($rootScope, $http, user) {
         //console.log($http.defaults.headers.common.Authorization); 
         
         //update provider_id table
-        $http.post("endpoints/register.php", data)
+        //$http.post("endpoints/register.php", data)
+        $http.get("http://fendatr.com/api/v1/provider").
+        success(function(response){
+            console.log("DID IT");
+            console.log(response);
+        })
+        /*
+        $http.post("http://fendatr.com/api/v1/provider")
         .success(function(response){
-            // console.log(response);
-            console.log("Added/updated user on database!");
+            console.log("registering...");
+            console.log(response);
+            console.log("Added/updated provider table on database!");
         }).error(function(error){
             //console.log(error);
-            console.log("Could not add user to database"); 
+            //console.log("Could not add user to database"); 
         });
-        
+       */ 
         // add token to session cache table
-        data['session_token'] = $http.defaults.headers.common.Authorization;
+        data.session_token = session_token; 
+        data.is_live_token = true;
+        console.log(data.session_token + " adding to cache");
         $http.post("endpoints/update-cache.php", data)
         .success(function(response){
             console.log("Added session to cache database!");
+            console.log(data);
+            console.log(response);
         }).error(function(error){
             console.log("Could not succeessfully add to cached database");
+            console.log(error);
+            console.log("failed cache :(");
         });
         
     });
     $rootScope.$on('user.logout', function() {
+        var data = {};
+        data.session_token = $http.defaults.headers.common.Authorization.split(" ").splice(-1)[0].slice(0, -1);
+        data.is_live_token = false;
+        console.log("removing " + atob(data.session_token).slice(1));
         $http.defaults.headers.common.Authorization = null;
+        $http.post("endpoints/update-cache.php", data)
+        .success(function(response){
+            console.log(response);
+        }).error(function(error){
+            console.log(error);
+        })
         
-        // remove token from session cache table
-        /* SEE EXAMPLE FROM ABOVE (UPDATE CACHE)
-            will probably look a lot like that, but let'SEE
-            just make this TODO
-        */
-        console.log("logged out"); 
     }); 
 });
