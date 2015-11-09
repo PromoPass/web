@@ -12,8 +12,8 @@ angular.module('myApp', [
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/', {templateUrl: 'partials/home.html', controller: 'HomeCtrl'});
-  $routeProvider.when('/login', {templateUrl: 'partials/login.html', login: true});
-  $routeProvider.when('/signup', {templateUrl: 'partials/signup.html', public: true});
+  $routeProvider.when('/login', {templateUrl: 'partials/login.html', login: true, controller: 'LoginCtrl'});
+  $routeProvider.when('/signup', {templateUrl: 'partials/signup.html', public: true, controller: 'RegisterCtrl'});
   $routeProvider.when('/verify-email', {templateUrl: 'partials/verify-email.html', verify_email: true});
   $routeProvider.when('/reset-password', {templateUrl: 'partials/reset-password.html', public: true});
   $routeProvider.when('/set-password', {templateUrl: 'partials/set-password.html', set_password: true});
@@ -27,29 +27,6 @@ config(['$routeProvider', function($routeProvider) {
 }]).
 run(function($rootScope, $http, user) {
     user.init({ appId: appid });
-    $rootScope.$on('user.login', function() {
-        var session_token = user.token();
-        $http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + session_token);
-        var data = user.current;
-        
-        //update provider_id table
-        $http.post("http://fendatr.com/api/v1/provider", data)
-        .success(function(response){
-            //console.log(JSON.stringify(response) + ": Added/updated provider table on database!");
-        }).error(function(error){
-            //console.log(error + ": could not add user to database");
-        });
-        
-        // add token to session cache table
-        data.session_token = session_token; 
-        $http.post("http://fendatr.com/api/v1/usercache", data)
-        .success(function(response){
-            //console.log(JSON.stringify(response) + ": added to user cache");
-        }).error(function(error){
-            //console.log(error + ": error adding to user cache");
-        });
-    });
-    
     $rootScope.$on('user.logout', function() {
         var data = {};
         data.session_token = $http.defaults.headers.common.Authorization.split(" ").splice(-1)[0].slice(0, -1);
