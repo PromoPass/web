@@ -4,17 +4,17 @@
 	</div>-->
 	<!--<div ng-show="!loading" class="row">-->
 	    <h1>Create Ad</h1> 
-	    <form name="createAdForm">
+	    
+	    <form ng-submit="createAd()" name="createAdForm">
 	        <div class="form-group">
 	    <label for="business">Business:</label>
-	    <select class="form-control" id="business"> 
-		<!-- load businesses here-->
-		<option>Select</option>
+	    <select ng-model="adInfo.BusinessID" class="form-control" id="business"> 
+
+		<option value="{{business.BusinessID}}" ng-repeat="business in businessList">{{business.Name}}</option>
 	    </select>
 		<br>
-
             <label for="title">Ad Title:</label>
-            <input type="text" class="form-control" id="title" maxlength="50" placeholder="Ad Title">
+            <input ng-model="adInfo.Title" type="text" class="form-control" id="title" maxlength="50" placeholder="Ad Title">
     	    </div>
     	    <br>
 <!--            <label for="template">Select a template:</label>
@@ -29,13 +29,13 @@
             </div>
 -->
 	    <label for="description">Ad Description:</label>
-	    <textarea class="form-control" rows="5" id="description" maxlength="500" placeholder="Please enter a description of your ad (up to 500 char)."></textarea>
+	    <textarea ng-model="adInfo.Writing" class="form-control" rows="5" id="description" maxlength="500" placeholder="Please enter a description of your ad (up to 500 char)."></textarea>
 	    <br>
-           <button ng-click="createAd()" class="btn  btn-primary " type="submit" ng-disabled="loading">
+           <button class="btn  btn-primary " type="submit" ng-disabled="loading">
             <span ng-show="!loading">Submit</span> 
             <img ng-show="loading" src="img/ajax-loader-blue.gif">
            </button> 
-           <button ng-click="" class="btn  btn-primary " type="cancel" ng-disabled="loading">
+           <button class="btn  btn-primary " type="cancel" ng-disabled="loading">
             <span ng-show="!loading">Cancel</span> 
            </button> 
 	    </form>

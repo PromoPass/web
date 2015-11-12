@@ -6,7 +6,7 @@ angular.module('myApp.controllers', [])
   .controller('HomeCtrl', ['$scope', function ($scope) {
 
   }])
-  .controller('LoginCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
+  .controller('LoginCtrl', ['$scope', '$http', 'user', '$window', function($scope, $http, user, $window) {
       $scope.login = (function() {
           $scope.$on('user.login', function() {
           var session_token = user.token();
@@ -24,10 +24,12 @@ angular.module('myApp.controllers', [])
             }).error(function(error){
                 console.log(error + ": error adding to user cache");
             });
+            // add token to session storage
+            $window.sessionStorage.token = user.current.user_id;
           });
       });
   }]) 
-  .controller('RegisterCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
+  .controller('RegisterCtrl', ['$scope', '$http', 'user', '$window', function($scope, $http, user, $window) {
       $scope.provider = {};
       $scope.provider.types = [ {"value": 'Bar'},
                                 {"value": 'Cafe'},
@@ -68,8 +70,8 @@ angular.module('myApp.controllers', [])
             //update provider_id table
             $http.post("http://fendatr.com/api/v1/provider", data)
             .success(function(response){
-                //console.log(JSON.stringify(response));
-                //console.log("Added provider to database!");
+                console.log(JSON.stringify(response));
+                console.log("Added provider to database!");
             }).error(function(error){
                 console.log(error + ": could not add user to database");
             });
@@ -99,11 +101,47 @@ angular.module('myApp.controllers', [])
             }).error(function(error){
                 console.log(error + ": error adding to user cache");
             });
+              
+            // add token to session storage
+            $window.sessionStorage.token = user.current.user_id;
           });
       }); 
   }])
-  .controller('CreateAdCtrl', ['$scope', '$http', '$location', function($scope, $http, $location) {
-    
+  .controller('CreateAdCtrl', ['$scope', '$http', '$location', '$window', function($scope, $http, $location, $window) {
+      console.log($window.sessionStorage.token + ": user id");
+      $scope.adInfo = {
+          BusinessID : undefined,
+          Title : undefined,
+          Writing : undefined,
+          TemplateID : 1 //TODO ACTUALLY ADD TEMPLATES IN
+      };
+      
+      $scope.businessList = {};
+      
+      $http.get("http://fendatr.com/api/v1/provider/" + $window.sessionStorage.token + "/business")
+      .success(function(response){
+          console.log(response + ": all businesses");
+          $scope.businessList = response.Business;
+        
+          
+      }).error(function(error){
+          console.log(error + ": failed to get all businesses from provider");
+      });
+      
+      $scope.createAd = function() {
+          var data = {
+            BusinessID: $scope.adInfo.BusinessID, 
+            Title: $scope.adInfo.Title,
+            Writing: $scope.adInfo.Writing,
+            TemplateID: $scope.adInfo.TemplateID,
+          };
+          $scope.adInfo = {};          
+          $http.post("http://fendatr.com/api/v1/ad/", data).success(function(response){
+          }).error(function(error){
+              console.log("failed at adding an ad :(");
+          })
+      }
+      
   }])
   .controller('EditProfileCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
       // variables
@@ -126,7 +164,7 @@ angular.module('myApp.controllers', [])
       // functions
       $scope.businesses = null;
           $http.get("endpoints/get-businesses.php").success(function(data) {
-              $scope.businesses = data;  
+              $scope.businesses = data.Business;  
           }).error(function(error){
               console.log(error);
           });
@@ -158,5 +196,5 @@ angular.module('myApp.controllers', [])
       }
   }])
   .controller('ViewAdHistoryCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
-  
+
   }])
