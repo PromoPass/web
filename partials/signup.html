@@ -1,51 +1,50 @@
-<style type="text/css">
-    .form input{
-        background-color: #fff;
-    }
+<style>
+.ng-invalid {
+    border-color: red;
+}
 </style>
 
-<form novalidate class="form" ua-signup ng-submit="register()">
+<form name="registerform" class="form" ua-signup ng-submit="register()" novalidate>
   <h2 class="form-heading">Please Register</h2>
   <div class="form-fields">
-	
-    <div class="form-group">
-    <label for="email">Email:</label>
-    <input name="login" placeholder="Enter email" type="email" class="form-control" ua-is-email>
-    </div>
+      <div class="form-group">
+      <label for="email">Email:</label>
+      <input ng-model="provider.email" name="login" placeholder="Enter email" type="email" class="form-control" ua-is-email required>
+  </div>
+
+      <div class="form-group">
+      <label for="password">Password:</label>
+      <input name="password" placeholder="Enter password" type="password" class="form-control" required>
+      </div>
 
     <div class="form-group">
-    <label for="password">Password:</label>
-    <input name="password" placeholder="Enter password" type="password" class="form-control">
-    </div>
-    
-    <div class="form-group">
     <label for="confirm">Confirm Password:</label>
-    <input name="confirm" placeholder="Re-enter password" type="password" class="form-control">
+    <input name="confirm" placeholder="Re-enter password" type="password" class="form-control" required>
     </div>
 
     <div class="form-group">
     <label for="business">Business:</label>
-    <input ng-model="provider.business" name="business" placeholder="Enter business name" type="text" class="form-control">
+    <input ng-model="provider.business" name="business" placeholder="Enter business name" type="text" class="form-control" required>
     </div>
-    
+
     <div class="form-group">
     <label for="gimbalID">Gimbal ID:</label>
-    <input ng-model="provider.gimbal_id" name="gimbalID" placeholder="Enter Gimbal ID" type="text" class="form-control">
+    <input ng-model="provider.gimbal_id" name="gimbalID" placeholder="Enter Gimbal ID" type="text" class="form-control" required>
     </div>
-    
+
     <div class="form-group">
     <label for="business">Business Type(s):</label>
     <div ng-repeat="type in provider.types" class="checkbox">
-        <label><input ng-change="update(bool, type)" ng-model="bool" ng-checked="isChecked(type.value)" id="{{$index}}" type="checkbox" value="{{type.value}}">{{type.value}}</label>
+        <label><input ng-change="update(bool, type)" ng-model="bool" ng-checked="isChecked(type.value)" id="{{$index}}" type="checkbox" value="{{type.value}}" ng-required="provider.typeList.length==0">{{type.value}}</label>
     </div>
     </div>
-    
+
   </div>
-  <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="loading">
+  <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="loading || registerform.$invalid">
     <span ng-show="!loading">Register</span>
     <img ng-show="loading" src="img/ajax-loader-blue.gif">
   </button>
   <div ng-show="error" class="alert alert-danger">{{ error.message }}</div>
   <div ng-show="verificationEmailSent" class="alert alert-success">An email has been sent to your inbox. Click on the link to verify your account.</div>
-  
+
 </form>

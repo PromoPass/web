@@ -6,7 +6,7 @@ angular.module('myApp.controllers', [])
   .controller('HomeCtrl', ['$scope', function ($scope) {
 
   }])
-  .controller('LoginCtrl', ['$scope', '$http', 'user', '$window', function($scope, $http, user, $window) {
+  .controller('LoginCtrl', ['$scope', '$http', 'user', '$window', 'UserService', function($scope, $http, user, $window, UserService) {
       $scope.login = (function() {
           $scope.$on('user.login', function() {
           var session_token = user.token();
@@ -16,16 +16,23 @@ angular.module('myApp.controllers', [])
           data.first_name = ""; //user.current.first_name;
           data.last_name = ""; //user.current.last_name;
           data.email = user.current.email;
-            // add token to session cache table
+            
             data.session_token = session_token; 
             $http.post("http://fendatr.com/api/v1/usercache", data)
             .success(function(response){
+                // add token to session cache table
+                // Please figure out how to deprecate THIS
+                // with the introduction of UserService
                 //console.log(JSON.stringify(response) + ": added to user cache");
+                
             }).error(function(error){
                 console.log(error + ": error adding to user cache");
             });
-            // add token to session storage
+            // add token to session storage PLEASE REMOVE ALL DEPENDENCY ON
+            // THIS TO USE "USERSERVICE INSTEAD
             $window.sessionStorage.token = user.current.user_id;
+            // Add information to userService
+            // see http stuff above
           });
       });
   }]) 
@@ -195,6 +202,26 @@ angular.module('myApp.controllers', [])
         }); 
       }
   }])
-  .controller('ViewAdHistoryCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
+  .controller('ViewAdHistoryCtrl', ['$scope', '$http', '$window', function($scope, $http, $window) {
+   $scope.businesses = null;
+   $scope.ads = null;
+   $scope.providerID = $window.sessionStorage.token;
+       // should probably later be placed in local scope, but:
+      
+       // what are all the businesses the provider has?
+       $http.get("http://fendatr.com/api/v1/provider/" + $scope.providerID + "/business")
+       .success(function(response){
+           $scope.businesses = response.Business; 
+           console.log(JSON.stringify($scope.businesses));
+       }).error(function(error){
+       console.log(error + " :( could not get provider businesses");
+       });
 
+       console.log(JSON.stringify($scope.businesses));
+       // for every business, what are all the ads?
+        
+       $scope.businesses.forEach(function(business) {
+           console.log(business);
+       });
+       //$http.get("http://fendatr.com/api/v1/business/");
   }])
