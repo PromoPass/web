@@ -9,23 +9,25 @@ angular.module('myApp.controllers', [])
   .controller('LoginCtrl', ['$scope', '$http', 'user', '$window', function($scope, $http, user, $window) {
       $scope.login = (function() {
           $scope.$on('user.login', function() {
-          var session_token = user.token();
-            $http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + session_token);
-          var data = {};
-          data.user_id = user.current.user_id;
-          data.first_name = ""; //user.current.first_name;
-          data.last_name = ""; //user.current.last_name;
-          data.email = user.current.email;
-            // add token to session cache table
-            data.session_token = session_token; 
-            $http.post("http://fendatr.com/api/v1/usercache", data)
-            .success(function(response){
-                //console.log(JSON.stringify(response) + ": added to user cache");
-            }).error(function(error){
-                console.log(error + ": error adding to user cache");
-            });
-            // add token to session storage
-            $window.sessionStorage.token = user.current.user_id;
+              var session_token = user.token();
+           /*
+          $http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + session_token);
+             */ 
+              var data = {};
+                  data.user_id = user.current.user_id;
+                  data.first_name = ""; //user.current.first_name;
+                  data.last_name = ""; //user.current.last_name;
+                  data.email = user.current.email;
+                  // add token to session cache table
+                  data.session_token = session_token; 
+                  $http.post("http://fendatr.com/api/v1/usercache", data)
+                      .success(function(response){
+                          //console.log(JSON.stringify(response) + ": added to user cache");
+                      }).error(function(error){
+                          console.log(error + ": error adding to user cache");
+                  });
+              // Add user token to local storage
+              localStorage.setItem('token', data.session_token);
           });
       });
   }]) 
@@ -57,53 +59,52 @@ angular.module('myApp.controllers', [])
       };
       
       $scope.register = (function () {
-          // update tables
           $scope.$on('user.login', function() {
-            var session_token = user.token();
-            $http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + session_token);
-            var data = {};
-            data.user_id = user.current.user_id;
-            data.first_name = ""; //user.current.first_name;
-            data.last_name = ""; //user.current.last_name;
-            data.email = user.current.email;
-
-            //update provider_id table
-            $http.post("http://fendatr.com/api/v1/provider", data)
-            .success(function(response){
-                console.log(JSON.stringify(response));
-                console.log("Added provider to database!");
-            }).error(function(error){
-                console.log(error + ": could not add user to database");
-            });
+              var session_token = user.token();
+           /*
+          $http.defaults.headers.common.Authorization = 'Basic ' + btoa(':' + session_token);
+             */ 
+              var data = {};
+                  data.user_id = user.current.user_id;
+                  data.first_name = ""; //user.current.first_name;
+                  data.last_name = ""; //user.current.last_name;
+                  data.email = user.current.email;
+                  // add token to session cache table
+                  data.session_token = session_token;
+                  $http.post("http://fendatr.com/api/v1/usercache", data)
+                      .success(function(response){
+                          //console.log(JSON.stringify(response) + ": added to user cache");
+                      }).error(function(error){
+                          console.log(error + ": error adding to user cache");
+                  });
+              // Add user token to local storage
+              localStorage.setItem('token', data.session_token); 
               
-            // add provider's first business
-            var dataBusiness = {};
-            dataBusiness.name = $scope.provider.business; 
-            dataBusiness.provider_id = user.current.user_id;
-            dataBusiness.typeList = $scope.provider.typeList; 
-            dataBusiness.gimbal_id = $scope.provider.gimbal_id; 
-            console.log(dataBusiness);
+              // Update provider_id table
+                $http.post("http://fendatr.com/api/v1/provider", data)
+                .success(function(response){
+                //console.log(JSON.stringify(response));
+                //console.log("Added provider to database!");
+                }).error(function(error){
+                console.log(error + ": could not add user to database");
+                });
 
-            $http.post("http://fendatr.com/api/v1/business", dataBusiness)
-            .success(function(response) {
+                // add provider's first business
+                var dataBusiness = {};
+                dataBusiness.name = $scope.provider.business; 
+                dataBusiness.provider_id = user.current.user_id;
+                dataBusiness.typeList = $scope.provider.typeList; 
+                dataBusiness.gimbal_id = $scope.provider.gimbal_id; 
+                console.log(dataBusiness);
+
+                $http.post("http://fendatr.com/api/v1/business", dataBusiness)
+                .success(function(response) {
                 //console.log(JSON.stringify(response));
                 console.log("Added business to database!");
-            }).error(function(error) {
+                }).error(function(error) {
                 console.log(error);
                 console.log("Couldn't add business to database");
-            });
-
-            // add token to session cache table
-            data.session_token = session_token; 
-            $http.post("http://fendatr.com/api/v1/usercache", data)
-            .success(function(response){
-                //console.log(JSON.stringify(response) + ": added to user cache");
-            }).error(function(error){
-                console.log(error + ": error adding to user cache");
-            });
-              
-            // add token to session storage
-            $window.sessionStorage.token = user.current.user_id;
+                });
           });
       }); 
   }])
@@ -197,4 +198,7 @@ angular.module('myApp.controllers', [])
   }])
   .controller('ViewAdHistoryCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
 
+  }])
+  .controller('ModifyAdCtrl', ['$scope', function($scope) {
+      
   }])

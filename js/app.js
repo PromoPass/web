@@ -21,6 +21,7 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/edit-profile', {templateUrl: 'partials/edit-profile.html', controller: 'EditProfileCtrl'});
   $routeProvider.when('/create-ad', {templateUrl: 'partials/create-ad.html', controller: 'CreateAdCtrl'});
   $routeProvider.when('/view-adhistory', {templateUrl: 'partials/view-adhistory.html', controller: 'ViewAdHistoryCtrl'});
+  $routeProvider.when('/modify-ad', {templateUrl: 'partials/modify-ad.html', controller: 'ModifyAdCtrl'});
   
   $routeProvider.otherwise({redirectTo: '/'});
   
@@ -29,8 +30,7 @@ run(function($rootScope, $http, user) {
     user.init({ appId: appid });
     $rootScope.$on('user.logout', function() {
         var data = {};
-        data.session_token = $http.defaults.headers.common.Authorization.split(" ").splice(-1)[0].slice(0, -1);
-        data.session_token = atob(data.session_token).slice(1);
+        data.session_token = localStorage.getItem('token');
         
         // remove session from usercache table
         $http.delete("http://fendatr.com/api/v1/usercache/" + data.session_token)
@@ -39,6 +39,7 @@ run(function($rootScope, $http, user) {
         }).error(function(error){
             //console.log(error + ": removal unsuccessful");
         })
-        $http.defaults.headers.common.Authorization = null;
+        
+        localStorage.removeItem('token');
     }); 
 });
