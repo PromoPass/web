@@ -109,7 +109,7 @@ angular.module('myApp.controllers', [])
       }); 
   }])
   .controller('CreateAdCtrl', ['$scope', '$http', '$location', '$window', function($scope, $http, $location, $window) {
-      console.log($window.sessionStorage.token + ": user id");
+      $scope.token = localStorage.getItem('token');
       $scope.adInfo = {
           BusinessID : undefined,
           Title : undefined,
@@ -119,12 +119,10 @@ angular.module('myApp.controllers', [])
       
       $scope.businessList = {};
       
-      $http.get("http://fendatr.com/api/v1/provider/" + $window.sessionStorage.token + "/business")
+      $http.get("http://fendatr.com/api/v1/usercache/" + $scope.token + "/business")
       .success(function(response){
-          console.log(response + ": all businesses");
+          //console.log(JSON.stringify(response) + ": all businesses");
           $scope.businessList = response.Business;
-        
-          
       }).error(function(error){
           console.log(error + ": failed to get all businesses from provider");
       });
@@ -199,6 +197,51 @@ angular.module('myApp.controllers', [])
   .controller('ViewAdHistoryCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
 
   }])
-  .controller('ModifyAdCtrl', ['$scope', function($scope) {
+  .controller('ModifyAdCtrl', ['$scope', '$http', function($scope, $http) {
+      $scope.adInfo = {
+          BusinessID : undefined,
+          Title : undefined,
+          Writing : undefined,
+          TemplateID: 1 // TODO ACTUALLY ADD TEMPLATES IN
+      };
       
+      $scope.businessList = {}; 
+          $http.get("http://fendatr.com/api/v1/usercache/" + localStorage.getItem('token') + "/business")
+          .success(function(response){
+              //console.log(JSON.stringify(response) + ": all businesses");
+              $scope.businessList = response.Business;
+          }).error(function(error){
+              console.log(error + ": failed to get all businesses from provider");
+          });
+      // Load Ad Values upon business selection 
+      $scope.$watch('adInfo.BusinessID', function() { 
+          $http.get("http://fendatr.com/api/v1/business/" + $scope.adInfo.BusinessID + "/current-ad")
+          .success(function(response) {
+              //console.log("success! " + JSON.stringify(response.Ad));
+              angular.extend($scope.adInfo, response.Ad[0]);
+              //console.log(" and then: " + JSON.stringify($scope.adInfo));
+          }).error(function(error){
+              console.log(error);
+          });
+       }, true);
+      
+     // On submit, update the Ad.
+     $scope.modifyAd = function() {
+         var data = $scope.adInfo;
+         $http.put("http://fendatr.com/api/v1/ad/" + $scope.adInfo.AdID, data)
+         .success(function(response) {
+             console.log("Updated the ad!");
+         }).error(function(error) {
+             console.log("Failed at updating the ad");
+         });
+         $scope.adInfo = {};
+     };
+      
+      
+      
+      
+      
+      
+      
+    
   }])

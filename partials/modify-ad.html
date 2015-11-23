@@ -1,0 +1,22 @@
+<div class="container">
+    <form ng-submit="modifyAd()" name="modifyAdForm">
+      <h1>Modify Ad</h1>
+      
+      <div class="form-group">
+          <label for="business">Business:</label>
+	      <select ng-model="adInfo.BusinessID" class="form-control" id="business">
+              <option value="{{business.BusinessID}}" ng-repeat="business in businessList">{{business.Name}}</option>
+	      </select>
+      </div>
+        
+      <div class="form-group">
+        <label for="title">Ad Title:</label>
+        <input ng-model="adInfo.Title" type="text" class="form-control" id="title" placeholder="Ad Title">
+      </div>
+      <div class="form-group">
+        <label for="description">Ad Description:</label>
+        <textarea ng-model="adInfo.Writing" class="form-control" rows="5" maxlength="500" id="description" placeholder="Please enter a description of your ad (up to 500 char)"></textarea>
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+</div><!-- /.container -->
