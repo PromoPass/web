@@ -114,6 +114,7 @@ angular.module('myApp.controllers', [])
           BusinessID : undefined,
           Title : undefined,
           Writing : undefined,
+	  PicURL : undefined,
           TemplateID : 1 //TODO ACTUALLY ADD TEMPLATES IN
       };
       
@@ -132,11 +133,13 @@ angular.module('myApp.controllers', [])
             BusinessID: $scope.adInfo.BusinessID, 
             Title: $scope.adInfo.Title,
             Writing: $scope.adInfo.Writing,
-            TemplateID: $scope.adInfo.TemplateID,
+	    PicURL : $scope.adInfo.PicURL,
+            TemplateID: $scope.adInfo.TemplateID
           };
           $scope.adInfo = {};          
           $http.post("http://fendatr.com/api/v1/ad/", data).success(function(response){
           }).error(function(error){
+	      console.log(JSON.stringify(data));
               console.log("failed at adding an ad :(");
           })
       }

@@ -15,7 +15,6 @@
 		<br>
             <label for="title">Ad Title:</label>
             <input ng-model="adInfo.Title" type="text" class="form-control" id="title" maxlength="50" placeholder="Ad Title">
-    	    </div>
     	    <br>
 <!--            <label for="template">Select a template:</label>
             <div class="radio">
@@ -28,6 +27,10 @@
             <label><input type="radio" name="template">Template 3</label>
             </div>
 -->
+
+            <label for="PicURL">Image URL:</label>
+            <input ng-model="adInfo.PicURL" type="text" class="form-control" id="PicURL" placeholder="Insert image URL">
+	    <br>
 	    <label for="description">Ad Description:</label>
 	    <textarea ng-model="adInfo.Writing" class="form-control" rows="5" id="description" maxlength="500" placeholder="Please enter a description of your ad (up to 500 char)."></textarea>
 	    <br>
@@ -38,5 +41,6 @@
            <button class="btn  btn-primary " type="cancel" ng-disabled="loading">
             <span ng-show="!loading">Cancel</span> 
            </button> 
+    	    </div>
 	    </form>
 </div>
