@@ -28,7 +28,8 @@ angular.module('myApp.controllers', [])
                   });
               // Add user token to local storage
               localStorage.setItem('token', data.session_token);
-          });
+              localStorage.setItem('user_id', data.user_id);   
+	});
       });
   }]) 
   .controller('RegisterCtrl', ['$scope', '$http', 'user', '$window', function($scope, $http, user, $window) {
@@ -147,13 +148,13 @@ angular.module('myApp.controllers', [])
   }])
   .controller('EditProfileCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
       // variables
-      $scope.businessInfo = {
+      /*$scope.businessInfo = {
           BusinessID: undefined,
           Name: undefined,
           ProviderID: user.current.user_id,
           EIN: undefined,
           GimbalID: undefined
-      }
+      }*/
       
       $scope.addBusinessInfo = {
           BusinessID: undefined,
@@ -162,25 +163,77 @@ angular.module('myApp.controllers', [])
           EIN: undefined,
           GimbalID: undefined
       }
+
+      $scope.provider.types = [ {"value": 'Bar'},
+                                {"value": 'Cafe'},
+				{"value": 'Restaurant'} ];
+
+      $scope.businesses.typeList = [];
+      $scope.provider.typeChecked = function(value) {
+          var match = false;
+          for (var i=0; i<$scope.provider.typeList.length; i++) {
+              if($scope.provider.typeList[i].value == value) {
+                  match = true;
+              }
+          }
+          return match;
+      };
+      $scope.update = function(bool, type) {
+        if(bool) {
+            $scope.provider.typeList.push(type);
+        } else {
+            for(var i=0; i < $scope.provider.typeList.length; i++) {
+                if($scope.provider.typeList[i].value == type.value) {
+                    $scope.provider.typeList.splice(i,1);
+                }
+            }
+        }
+      };
+      
+   
+
       
       // functions
       $scope.businesses = null;
-          $http.get("endpoints/get-businesses.php").success(function(data) {
-              $scope.businesses = data.Business;  
+          $http.get("http://fendatr.com/api/v1/provider/"+localStorage.getItem('user_id')+'/business').success(function(data) {
+              $scope.businesses = data.Business;
+	      $scope.addTypes();   
+	      
           }).error(function(error){
               console.log(error);
           });
+
+      $scope.addTypes = function() {
+	angular.forEach($scope.businesses, function(value, key) {
+		var BusinessID = value.BusinessID;
+		console.log("BusinessID: "+BusinessID);
+		$http.get("http://fendatr.com/api/v1/business/" + BusinessID + "/types").success(function(data) {
+		$scope.businesses[key]["types"] = data.BusinessType;
+		console.log($scope.businesses[key]);
+		//console.log("key: " + JSON.stringify(key));
+		}).error(function(error) {
+			console.log(error);
+		console.log("failed to add types");
+		});
       
+	});
+	console.log($scope.businesses);
+}
       
+      $scope.isChecked = function() {
+	angular.forEach($scope.businesses, function(value, key) {
+	
+		}	
+	}
+
       $scope.editBusiness = function(business) {
         console.log(business);
-        $http.post("endpoints/add-business.php", business).success(function(response){
+        $http.post("http://fendatr.com/api/v1/business", business).success(function(response){
             console.log(response);
         }).error(function(error){
             console.log(error); 
         }); 
       }
-      
       $scope.addBusiness = function() {
           var data = {
             BusinessID: $scope.addBusinessInfo.BusinessID, 
@@ -190,7 +243,7 @@ angular.module('myApp.controllers', [])
             GimbalID: $scope.addBusinessInfo.GimbalID
           }
           console.log(data);
-        $http.post("endpoints/add-business.php", data).success(function(response){
+        $http.post("http://fendatr.com/api/v1/business", data).success(function(response){
             console.log(response);
         }).error(function(error){
             console.log(error); 
@@ -198,8 +251,7 @@ angular.module('myApp.controllers', [])
       }
   }])
   .controller('ViewAdHistoryCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
-
-  }])
+}])
   .controller('ModifyAdCtrl', ['$scope', '$http', function($scope, $http) {
       $scope.adInfo = {
           BusinessID : undefined,
