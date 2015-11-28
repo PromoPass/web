@@ -205,6 +205,7 @@ angular.module('myApp.controllers', [])
           BusinessID : undefined,
           Title : undefined,
           Writing : undefined,
+	  PicURL : undefined,
           TemplateID: 1 // TODO ACTUALLY ADD TEMPLATES IN
       };
       
