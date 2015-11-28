@@ -41,5 +41,6 @@ run(function($rootScope, $http, user) {
         })
         
         localStorage.removeItem('token');
+        localStorage.removeItem('user_id');
     }); 
 });

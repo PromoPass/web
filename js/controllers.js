@@ -47,16 +47,16 @@ angular.module('myApp.controllers', [])
           }
           return match;
       };
-      $scope.update = function(bool, type) {
-        if(bool) {
-            $scope.provider.typeList.push(type);
+
+
+       $scope.update = function(bool, type) {
+         if(bool) {
+            $scope.provider.typeList.push(type.value);
         } else {
-            for(var i=0; i < $scope.provider.typeList.length; i++) {
-                if($scope.provider.typeList[i].value == type.value) {
-                    $scope.provider.typeList.splice(i,1);
-                }
-            }
+            var index = $scope.provider.typeList.indexOf(type.value);
+            $scope.provider.typeList.splice(index,1);
         }
+
       };
       
       $scope.register = (function () {
@@ -79,7 +79,8 @@ angular.module('myApp.controllers', [])
                           console.log(error + ": error adding to user cache");
                   });
               // Add user token to local storage
-              localStorage.setItem('token', data.session_token); 
+              localStorage.setItem('token', data.session_token);
+              localStorage.setItem('user_id', data.user_id);   
               
               // Update provider_id table
                 $http.post("http://fendatr.com/api/v1/provider", data)
@@ -92,10 +93,10 @@ angular.module('myApp.controllers', [])
 
                 // add provider's first business
                 var dataBusiness = {};
-                dataBusiness.name = $scope.provider.business; 
-                dataBusiness.provider_id = user.current.user_id;
+                dataBusiness.Name = $scope.provider.business; 
+                dataBusiness.ProviderID = user.current.user_id;
                 dataBusiness.typeList = $scope.provider.typeList; 
-                dataBusiness.gimbal_id = $scope.provider.gimbal_id; 
+                dataBusiness.GimbalID = $scope.provider.gimbal_id; 
                 console.log(dataBusiness);
 
                 $http.post("http://fendatr.com/api/v1/business", dataBusiness)
@@ -159,17 +160,17 @@ angular.module('myApp.controllers', [])
       $scope.addBusinessInfo = {
           BusinessID: undefined,
           Name: undefined,
-          ProviderID: user.current.user_id,
+          ProviderID: localStorage.getItem('user_id'),
           EIN: undefined,
           GimbalID: undefined
       }
 
-      $scope.provider.types = [ {"value": 'Bar'},
-                                {"value": 'Cafe'},
-				{"value": 'Restaurant'} ];
-
-      $scope.businesses.typeList = [];
-      $scope.provider.typeChecked = function(value) {
+      $scope.BusinessTypes = [ {"value": 'Bar'},
+                               {"value": 'Cafe'},
+                               {"value": 'Restaurant'} ];
+/*
+      $scope.typeList = [];
+      $scope.typeChecked = function(value) {
           var match = false;
           for (var i=0; i<$scope.provider.typeList.length; i++) {
               if($scope.provider.typeList[i].value == value) {
@@ -178,62 +179,67 @@ angular.module('myApp.controllers', [])
           }
           return match;
       };
-      $scope.update = function(bool, type) {
-        if(bool) {
-            $scope.provider.typeList.push(type);
-        } else {
-            for(var i=0; i < $scope.provider.typeList.length; i++) {
-                if($scope.provider.typeList[i].value == type.value) {
-                    $scope.provider.typeList.splice(i,1);
-                }
-            }
-        }
-      };
-      
+    */     
    
 
       
       // functions
       $scope.businesses = null;
-          $http.get("http://fendatr.com/api/v1/provider/"+localStorage.getItem('user_id')+'/business').success(function(data) {
+          $http.get("http://fendatr.com/api/v1/provider/" + localStorage.getItem('user_id') + "/business").success(function(data) {
               $scope.businesses = data.Business;
-	      $scope.addTypes();   
-	      
+	          $scope.addTypes();   
           }).error(function(error){
               console.log(error);
           });
 
       $scope.addTypes = function() {
-	angular.forEach($scope.businesses, function(value, key) {
-		var BusinessID = value.BusinessID;
-		console.log("BusinessID: "+BusinessID);
-		$http.get("http://fendatr.com/api/v1/business/" + BusinessID + "/types").success(function(data) {
-		$scope.businesses[key]["types"] = data.BusinessType;
-		console.log($scope.businesses[key]);
-		//console.log("key: " + JSON.stringify(key));
-		}).error(function(error) {
-			console.log(error);
-		console.log("failed to add types");
-		});
-      
-	});
-	console.log($scope.businesses);
-}
-      
-      $scope.isChecked = function() {
-	angular.forEach($scope.businesses, function(value, key) {
-	
-		}	
-	}
+    	angular.forEach($scope.businesses, function(value, key) {
+            var BusinessID = value.BusinessID;
+            //console.log("BusinessID: " + BusinessID);
+            $http.get("http://fendatr.com/api/v1/business/" + BusinessID + "/types").success(function(data) {
+            $scope.businesses[key]["typeList"] = data.BusinessType;
+            //console.log("key: " + JSON.stringify(key));
+            }).error(function(error) {
+                console.log(error);
+            console.log("failed to add types");
+            });
+	    });
+	    //console.log($scope.businesses);
+     }
+    
+      $scope.isChecked = function(businesstypes, checkboxValue) {
+        console.log("isChecked: " + businesstypes);
+        var match = false;
+	    angular.forEach(businesstypes, function(value, key) {
+            if(value == checkboxValue) {
+               match = true; 
+            } 
+        });
+        return match; 
+	  }
+
+       $scope.update = function(business, bool, type) {
+        console.log("updating..." + JSON.stringify(business) + " " + JSON.stringify(bool) + " " + JSON.stringify(type.value));
+        if(bool) {
+            business.typeList.push(type.value);
+        } else {
+            console.log(business.typeList.length + " :types length");
+            var index = business.typeList.indexOf(type.value);
+            business.typeList.splice(index,1);
+        }
+      };
 
       $scope.editBusiness = function(business) {
-        console.log(business);
-        $http.post("http://fendatr.com/api/v1/business", business).success(function(response){
+        console.log("Editing!");
+        $http.put("http://fendatr.com/api/v1/business/" + business.BusinessID, business)
+        .success(function(response){
+            console.log("Hooray, edited business!");
             console.log(response);
         }).error(function(error){
+            console.log("boo, couldn't edit business!");
             console.log(error); 
         }); 
-      }
+      };
       $scope.addBusiness = function() {
           var data = {
             BusinessID: $scope.addBusinessInfo.BusinessID, 
